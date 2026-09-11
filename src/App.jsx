@@ -46,7 +46,8 @@ const LANG = {
     exact: 'Need exact roll to reach 100!',
     lang: 'தமிழ்',
     paused: 'Game Paused',
-    turn: 'Turn'
+    turn: 'Turn',
+    legend: '🐍 Snake &nbsp;&nbsp; 🪜 Ladder'
   },
   ta: {
     title: 'படிப்பாதம்',
@@ -72,7 +73,8 @@ const LANG = {
     exact: '100 செல்ல சரியான எண் வேண்டும்!',
     lang: 'English',
     paused: 'விளையாட்டு நிறுத்தப்பட்டது',
-    turn: 'முறை'
+    turn: 'முறை',
+    legend: '🐍 பாம்பு &nbsp;&nbsp; 🪜 படிக்கட்டு'
   }
 }
 
@@ -324,6 +326,9 @@ export default function App() {
     return (
       <div className="app">
         <div className="setup">
+          <div className="setup-hero" aria-hidden="true">
+            <span>🎲</span>
+          </div>
           <h1 className="title">{t.title}</h1>
           <p className="subtitle">{t.subtitle}</p>
           <button className="lang-btn" onClick={() => setLang(l => l === 'en' ? 'ta' : 'en')}>
@@ -384,6 +389,7 @@ export default function App() {
               {t.start}
             </button>
           )}
+          <p className="setup-note" dangerouslySetInnerHTML={{ __html: t.legend }} />
         </div>
       </div>
     )
@@ -432,6 +438,7 @@ export default function App() {
               </div>
             ))}
           </div>
+          <div className="board-legend" dangerouslySetInnerHTML={{ __html: t.legend }} />
         </div>
         <div className="side-panel">
           <div className="current-turn">
