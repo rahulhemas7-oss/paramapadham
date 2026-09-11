@@ -47,7 +47,8 @@ const LANG = {
     lang: 'தமிழ்',
     paused: 'Game Paused',
     turn: 'Turn',
-    legend: '🐍 Snake &nbsp;&nbsp; 🪜 Ladder'
+    legend: '🐍 Snake &nbsp;&nbsp; 🪜 Ladder',
+    rollHistory: 'Roll History'
   },
   ta: {
     title: 'படிப்பாதம்',
@@ -74,7 +75,8 @@ const LANG = {
     lang: 'English',
     paused: 'விளையாட்டு நிறுத்தப்பட்டது',
     turn: 'முறை',
-    legend: '🐍 பாம்பு &nbsp;&nbsp; 🪜 படிக்கட்டு'
+    legend: '🐍 பாம்பு &nbsp;&nbsp; 🪜 படிக்கட்டு',
+    rollHistory: 'பக்கா வரலாறு'
   }
 }
 
@@ -128,6 +130,7 @@ export default function App() {
   const [msg, setMsg] = useState('')
   const [paused, setPaused] = useState(false)
   const [rolling, setRolling] = useState(false)
+  const [rollHistory, setRollHistory] = useState([])
 
   const timers = useRef([])
   const stateRef = useRef({ turn: 0, players: [], animating: false, paused: false, winner: null })
@@ -176,6 +179,12 @@ export default function App() {
       addTimer(() => {
         setDice(result)
         setRolling(false)
+        setRollHistory(h => [{
+          id: Date.now() + Math.random(),
+          player: s.players[s.turn].name,
+          color: s.players[s.turn].color,
+          value: result
+        }, ...h].slice(0, 6))
         addTimer(() => {
           gameRef.current.executeMove(result)
         }, 500)
@@ -279,6 +288,7 @@ export default function App() {
       setMsg('')
       setPaused(false)
       setRolling(false)
+      setRollHistory([])
       setPhase('playing')
     },
 
@@ -292,6 +302,7 @@ export default function App() {
       setMsg('')
       setPaused(false)
       setRolling(false)
+      setRollHistory([])
     },
 
     newGame() {
@@ -305,6 +316,7 @@ export default function App() {
       setMsg('')
       setPaused(false)
       setRolling(false)
+      setRollHistory([])
     },
 
     togglePause() {
@@ -454,6 +466,19 @@ export default function App() {
             {t.roll}
           </button>
           <div className="message">{msg || '\u00A0'}</div>
+          {rollHistory.length > 0 && (
+            <div className="roll-history">
+              <div className="roll-history-title">{t.rollHistory}</div>
+              <div className="roll-history-list">
+                {rollHistory.map((r) => (
+                  <div key={r.id} className="roll-row">
+                    <span className="roll-player" style={{ color: r.color }}>{r.player}</span>
+                    <span className="roll-value">🎲 {r.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="player-list">
             {players.map((p, i) => (
               <div key={i} className={`player-card ${turn === i ? 'active-card' : ''}`}>
